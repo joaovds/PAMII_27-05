@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,16 +11,32 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import api from '../../services/api';
 
 import styles from './styles';
 
+interface IPessoa {
+  id: number;
+  nome: string;
+  curso: string;
+}
+
 const FormPeople: React.FC = () => {
   const navigation = useNavigation();
+  const route = useRoute();
 
   const [nome, setNome] = useState('');
   const [curso, setCurso] = useState('');
+
+  const routeParams = route.params as IPessoa;
+
+  useEffect(() => {
+    if (routeParams) {
+      setNome(routeParams.nome);
+      setCurso(routeParams.curso);
+    }
+  }, []);
 
   const handleCreate = () => {
     let formData = new FormData();
@@ -49,6 +65,27 @@ const FormPeople: React.FC = () => {
       });
   };
 
+  const handleUpdate = () => {
+    const data = { nome, curso };
+
+    api.put(`/${routeParams.id}`, data).then((res) => {
+      Alert.alert(
+        res.status == 200 ? 'Sucesso' : 'Erro',
+        res.status == 200
+          ? 'Pessoa Atualizada com sucesso!'
+          : 'Houve um problema',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+        { cancelable: false },
+      );
+
+      navigation.navigate('Home');
+    });
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -64,7 +101,6 @@ const FormPeople: React.FC = () => {
 
           <View style={styles.form}>
             <Text style={styles.title}>Cadastrar Pessoa</Text>
-
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Nome</Text>
               <TextInput
@@ -85,9 +121,13 @@ const FormPeople: React.FC = () => {
                 onChangeText={(text) => setCurso(text)}
               />
             </View>
-
-            <RectButton style={styles.button} onPress={handleCreate}>
-              <Text style={styles.buttonText}>Cadastrar</Text>
+            <RectButton
+              style={styles.button}
+              onPress={() => (routeParams ? handleUpdate() : handleCreate())}
+            >
+              <Text style={styles.buttonText}>
+                {routeParams ? 'Atualizar' : 'Cadastrar'}
+              </Text>
             </RectButton>
           </View>
         </SafeAreaView>

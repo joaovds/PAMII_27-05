@@ -98,7 +98,18 @@ const Home: React.FC = () => {
               </View>
               <View style={styles.actions}>
                 <RectButton style={styles.buttonAction}>
-                  <Feather name="edit" size={20} color="#4d4d4d" />
+                  <Feather
+                    name="edit"
+                    size={20}
+                    color="#4d4d4d"
+                    onPress={() => {
+                      navigation.navigate('FormPeople', {
+                        id: item.id,
+                        nome: item.nome,
+                        curso: item.curso,
+                      });
+                    }}
+                  />
                 </RectButton>
 
                 <RectButton
