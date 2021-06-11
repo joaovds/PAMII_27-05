@@ -4,6 +4,10 @@
 
 <br>
 
+### Tela Inicial
+
+<img src=".github/mostra.jpg" alt="home" style="margin-top: 30px;" width="240px">
+
 ### Gif mostrando a aplicação
 
 > obs: a qualidade do gif está baixa
