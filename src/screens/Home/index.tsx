@@ -21,8 +21,10 @@ const Home: React.FC = () => {
   const [pessoas, setPessoas] = useState<IPessoa[]>();
 
   useEffect(() => {
-    api.get('').then((res) => setPessoas(res.data));
-  }, []);
+    return navigation.addListener('focus', () => {
+      api.get('').then((res) => setPessoas(res.data));
+    });
+  }, [navigation]);
 
   const handleDelete = () => {
     Alert.alert(
