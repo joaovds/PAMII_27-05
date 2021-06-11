@@ -67,6 +67,7 @@ const Home: React.FC = () => {
             placeholder="Digite o ID do usuário"
             placeholderTextColor="#333333"
             keyboardType="numeric"
+            editable={false}
           />
         </View>
 
