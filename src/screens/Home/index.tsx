@@ -20,13 +20,15 @@ const Home: React.FC = () => {
 
   const [pessoas, setPessoas] = useState<IPessoa[]>();
 
+  const getData = api.get('').then((res) => setPessoas(res.data));
+
   useEffect(() => {
     return navigation.addListener('focus', () => {
-      api.get('').then((res) => setPessoas(res.data));
+      getData;
     });
   }, [navigation]);
 
-  const handleDelete = () => {
+  const handleDelete = (personId: string | number) => {
     Alert.alert(
       'Confirmação',
       'Deseja mesmo deletar este registro?',
@@ -38,7 +40,11 @@ const Home: React.FC = () => {
         },
         {
           text: 'Sim',
-          onPress: () => console.log('sim'),
+          onPress: () => {
+            api.delete(`/${personId}`).then(() => {
+              getData;
+            });
+          },
         },
       ],
       { cancelable: false },
@@ -97,7 +103,7 @@ const Home: React.FC = () => {
 
                 <RectButton
                   style={styles.buttonAction}
-                  onPress={() => handleDelete()}
+                  onPress={() => handleDelete(item.id)}
                 >
                   <Feather name="delete" size={20} color="#8f4040" />
                 </RectButton>
