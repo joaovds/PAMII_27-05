@@ -1,69 +1,28 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  Alert,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RectButton } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
+import api from '../../services/api';
+
 import styles from './styles';
 
-const pessoasFake = [
-  {
-    id: 1,
-    nome: 'Nome Qualquer 1 Nome Qualquer 1 Nome Qualquer 1',
-    curso: 'Nome de um curso Nome de um curso',
-  },
-  {
-    id: 2,
-    nome: 'Nome Qualquer 2',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 3,
-    nome: 'Nome Qualquer 3',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 4,
-    nome: 'Nome Qualquer 4',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 5,
-    nome: 'Nome Qualquer 5',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 6,
-    nome: 'Nome Qualquer 6',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 7,
-    nome: 'Nome Qualquer 7',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 8,
-    nome: 'Nome Qualquer 8',
-    curso: 'Nome de um curso',
-  },
-  {
-    id: 9,
-    nome: 'Nome Qualquer 9',
-    curso: 'Nome de um curso',
-  },
-];
+interface IPessoa {
+  id: number;
+  nome: string;
+  curso: string;
+}
 
 const Home: React.FC = () => {
   const navigation = useNavigation();
+
+  const [pessoas, setPessoas] = useState<IPessoa[]>();
+
+  useEffect(() => {
+    api.get('').then((res) => setPessoas(res.data));
+  }, []);
 
   const handleDelete = () => {
     Alert.alert(
@@ -117,7 +76,7 @@ const Home: React.FC = () => {
 
       <View style={styles.pessoasContainer}>
         <FlatList
-          data={pessoasFake}
+          data={pessoas}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <View style={styles.pessoaCard}>
